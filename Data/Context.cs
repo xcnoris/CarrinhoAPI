@@ -1,4 +1,5 @@
-﻿using CarrinhoAPI.Models;
+﻿using CarrinhoAPI.Data.Map;
+using CarrinhoAPI.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,14 +13,15 @@ namespace CarrinhoAPI.Data
 
         }
 
-        //public DbSet<Cliente> Clientes { get; set; }
-
-        public DbSet<Congregacao> Congregacoes { get; set; }
+        public DbSet<CarrinhoModel> Carrinhos { get; set; }
+        public DbSet<CongregacaoModel> Congregacoes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder); // Chama o método base para garantir a configuração padrão do Identity
+            modelBuilder.ApplyConfiguration(new CongregacaoMap());
+            modelBuilder.ApplyConfiguration(new CarrinhoMap());
 
+            base.OnModelCreating(modelBuilder); // Chama o método base para garantir a configuração padrão do Identity
 
             // Outras configurações pode ser adicionadas aqui.
         }

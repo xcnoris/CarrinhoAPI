@@ -1,16 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CarrinhoAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CarrinhoAPI.Models
 {
-    public class Congregacao
+    public class CongregacaoModel
     {
         public int Id { get; set; }
 
         [Required(ErrorMessage = "Nome da Congregação é Obrigatorio!")]
-        [StringLength(100, ErrorMessage = "Nome da Congregação deve ter no Maximo 100 Caracteres!")]
+        [StringLength(200, ErrorMessage = "Nome da Congregação deve ter no Maximo 200 Caracteres!")]
         public string Nome { get; set; }
 
+        public SituacaoGeral Situacao { get; set; }
 
         public void ValidarClasse()
         {

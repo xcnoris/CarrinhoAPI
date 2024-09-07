@@ -12,33 +12,33 @@ namespace CarrinhoAPI.Controllers
     [ApiController]
     public class CongregacaoController : ControllerBase
     {
-        public CongregacaoController(IEndPointCrud<Congregacao> repository)
+        public CongregacaoController(IEndPointCrud<CongregacaoModel> repository)
         {
      
         }
 
         [HttpGet("BuscarTodos")]
-        public async Task<List<Congregacao>> BuscarTodos([FromServices] DAL<Congregacao> dalCongregacao)
+        public async Task<List<CongregacaoModel>> BuscarTodos([FromServices] DAL<CongregacaoModel> dalCongregacao)
         {
-            IEnumerable<Congregacao> listCongregacoes = await dalCongregacao.ListarAsync();
+            IEnumerable<CongregacaoModel> listCongregacoes = await dalCongregacao.ListarAsync();
             return listCongregacoes.ToList();
         }
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<Congregacao> BuscarPorId([FromServices] DAL<Congregacao> dalCongregacao, int id)
+        public async Task<CongregacaoModel> BuscarPorId([FromServices] DAL<CongregacaoModel> dalCongregacao, int id)
         {
             
             return await dalCongregacao.BuscarPorAsync(c => c.Id.Equals(id));
         }
 
         [HttpPost("Adicionar")]
-        public async Task<Congregacao> Adicionar([FromServices] DAL<Congregacao> dalCongregacao, [FromBody] Congregacao congregacao)
+        public async Task<CongregacaoModel> Adicionar([FromServices] DAL<CongregacaoModel> dalCongregacao, [FromBody] CongregacaoModel congregacao)
         {
             await dalCongregacao.AdicionarAsync(congregacao);
             return congregacao;
         }
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<Congregacao>> Atualizar([FromServices] DAL<Congregacao> dalCongregacao,int id, [FromBody] Congregacao congregacao)
+        public async Task<ActionResult<CongregacaoModel>> Atualizar([FromServices] DAL<CongregacaoModel> dalCongregacao,int id, [FromBody] CongregacaoModel congregacao)
         {
             // Primeiro, recupera a entidade existente pelo ID
             var entidadeExistente = await dalCongregacao.RecuperarPorAsync(c => c.Id.Equals(id));
@@ -62,10 +62,10 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover([FromServices] DAL<Congregacao> dalCongregacao, int id)
+        public async Task<ActionResult<bool>> Remover([FromServices] DAL<CongregacaoModel> dalCongregacao, int id)
         {
             // Primeiro, recupera a entidade existente pelo ID
-            Congregacao entidadeExistente = await dalCongregacao.RecuperarPorAsync(c => c.Id.Equals(id));
+            CongregacaoModel entidadeExistente = await dalCongregacao.RecuperarPorAsync(c => c.Id.Equals(id));
 
             if (entidadeExistente == null)
             {

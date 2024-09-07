@@ -1,24 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CarrinhoAPI.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace CarrinhoAPI.Models
 {
-    public class Carrinho
+    public class CarrinhoModel
     {
-        public string ID { get; set; }
+        public string Id { get; set; }
 
         [Required(ErrorMessage = "Nome do Carrinho é Obrigatorio!")]
         [StringLength(30, ErrorMessage = "Nome do Carrinho Deve ter no Maximo 30 Caracteres!")]
         public string Nome { get; set; }
-        public string Congregacao_ID { get; set; }
-        public string Congregacao_Nome { get; set; }
-
-        [Required(ErrorMessage = "Situação do Carrinho é Obrigatorio!")]
-
-        public string Situacao { get; set; }
-
-        [Required(ErrorMessage = "Codigo do Carrinho é obrigatorio!")]
-        public string Codigo_Carrinho { get; set; }
+        public int Codigo_Carrinho { get; set; }
+        public SituacaoGeral Situacao { get; set; }
+        public int CongregacaoId { get; set; }
+        public virtual CongregacaoModel Congregacao { get; set; }
 
         public void ValidarClasse()
         {
@@ -40,11 +36,6 @@ namespace CarrinhoAPI.Models
                 // E força a mensagem da exceção
                 throw new ValidationException(sbrErrors.ToString());
             }
-            if (this.Situacao == "0")
-            {
-                throw new ValidationException("Situação não pode ser todas!");
-            }
-
         }
     }
 }

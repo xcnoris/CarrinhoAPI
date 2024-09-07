@@ -1,4 +1,6 @@
+using CarrinhoAPI.Data;
 using CarrinhoAPI.Repository.DataBase;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +11,10 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddEntityFrameworkSqlServer()
+    .AddDbContext<Context>(
+        options => options.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
+    );
 builder.Services.AddScoped(typeof(DAL<>));
 
 var app = builder.Build();
