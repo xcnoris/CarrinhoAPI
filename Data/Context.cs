@@ -1,7 +1,6 @@
 ﻿using CarrinhoAPI.Data.Map;
 using CarrinhoAPI.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using CarrinhoAPI.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarrinhoAPI.Data

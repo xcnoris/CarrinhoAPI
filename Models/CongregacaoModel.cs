@@ -34,6 +34,11 @@ namespace CarrinhoAPI.Models
                 // E força a mensagem da exceção
                 throw new ValidationException(sbrErrors.ToString());
             }
+            // Validação adicional para o enum SituacaoGeral
+            if (!Enum.IsDefined(typeof(SituacaoGeral), this.Situacao))
+            {
+                throw new ValidationException("A situação do carrinho não é válida.");
+            }
         }
     }
 }

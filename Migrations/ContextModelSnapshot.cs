@@ -21,10 +21,34 @@ namespace CarrinhoAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CarrinhoAPI.Models.CarrinhoModel", b =>
+            modelBuilder.Entity("CarrinhoAPI.Models.CongregacaoModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("Situacao")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Congregacoes");
+                });
+
+            modelBuilder.Entity("CarrinhoAPI.Models.Enums.CarrinhoModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Codigo_Carrinho")
                         .HasColumnType("int");
@@ -47,28 +71,7 @@ namespace CarrinhoAPI.Migrations
                     b.ToTable("Carrinhos");
                 });
 
-            modelBuilder.Entity("CarrinhoAPI.Models.CongregacaoModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)");
-
-                    b.Property<int>("Situacao")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Congregacoes");
-                });
-
-            modelBuilder.Entity("CarrinhoAPI.Models.CarrinhoModel", b =>
+            modelBuilder.Entity("CarrinhoAPI.Models.Enums.CarrinhoModel", b =>
                 {
                     b.HasOne("CarrinhoAPI.Models.CongregacaoModel", "Congregacao")
                         .WithMany()

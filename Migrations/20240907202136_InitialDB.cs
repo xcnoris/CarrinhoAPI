@@ -28,7 +28,8 @@ namespace CarrinhoAPI.Migrations
                 name: "Carrinhos",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
                     Codigo_Carrinho = table.Column<int>(type: "int", nullable: false),
                     Situacao = table.Column<int>(type: "int", nullable: false),

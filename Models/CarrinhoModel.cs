@@ -1,20 +1,23 @@
-﻿using CarrinhoAPI.Models.Enums;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace CarrinhoAPI.Models
+namespace CarrinhoAPI.Models.Enums
 {
     public class CarrinhoModel
     {
-        public string Id { get; set; }
+
+        public int Id { get; set; }
 
         [Required(ErrorMessage = "Nome do Carrinho é Obrigatorio!")]
         [StringLength(30, ErrorMessage = "Nome do Carrinho Deve ter no Maximo 30 Caracteres!")]
         public string Nome { get; set; }
         public int Codigo_Carrinho { get; set; }
+        [Required(ErrorMessage = "Situação do carrinho é obrigatório!")]
         public SituacaoGeral Situacao { get; set; }
+
+        [Required(ErrorMessage = "O ID da Congregação é obrigatório!")]
         public int CongregacaoId { get; set; }
-        public virtual CongregacaoModel Congregacao { get; set; }
+        public virtual CongregacaoModel? Congregacao { get; set; }
 
         public void ValidarClasse()
         {
@@ -35,6 +38,11 @@ namespace CarrinhoAPI.Models
                 // Add as mensagens de erro para um exeção do tipo validationexception.
                 // E força a mensagem da exceção
                 throw new ValidationException(sbrErrors.ToString());
+            }
+            // Validação adicional para o enum SituacaoGeral
+            if (!Enum.IsDefined(typeof(SituacaoGeral), this.Situacao))
+            {
+                throw new ValidationException("A situação do carrinho não é válida.");
             }
         }
     }

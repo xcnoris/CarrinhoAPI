@@ -1,4 +1,4 @@
-﻿using CarrinhoAPI.Models;
+﻿using CarrinhoAPI.Models.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
