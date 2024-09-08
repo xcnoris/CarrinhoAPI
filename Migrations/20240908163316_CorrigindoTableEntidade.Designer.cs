@@ -4,6 +4,7 @@ using CarrinhoAPI.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrinhoAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    partial class ContextModelSnapshot : ModelSnapshot
+    [Migration("20240908163316_CorrigindoTableEntidade")]
+    partial class CorrigindoTableEntidade
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -87,12 +90,12 @@ namespace CarrinhoAPI.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Endereco")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("Endereco_Complemento")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Endereco_Numero")
                         .HasColumnType("nvarchar(max)");
@@ -146,60 +149,6 @@ namespace CarrinhoAPI.Migrations
                     b.ToTable("Carrinhos");
                 });
 
-            modelBuilder.Entity("CarrinhoAPI.Models.LocalPregacaoModel", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Bairro")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Cidade")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Complemento")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("CongregacaoId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("Data_Cadastro")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Descricao")
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
-
-                    b.Property<string>("Endereco")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Nome")
-                        .IsRequired()
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
-
-                    b.Property<int>("Situacao")
-                        .HasMaxLength(1)
-                        .HasColumnType("int");
-
-                    b.Property<string>("UF")
-                        .IsRequired()
-                        .HasMaxLength(2)
-                        .HasColumnType("nvarchar(2)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CongregacaoId");
-
-                    b.ToTable("Locais_Pregacao");
-                });
-
             modelBuilder.Entity("CarrinhoAPI.Models.EntidadeModel", b =>
                 {
                     b.HasOne("CarrinhoAPI.Models.CongregacaoModel", "Congregacao")
@@ -212,17 +161,6 @@ namespace CarrinhoAPI.Migrations
                 });
 
             modelBuilder.Entity("CarrinhoAPI.Models.Enums.CarrinhoModel", b =>
-                {
-                    b.HasOne("CarrinhoAPI.Models.CongregacaoModel", "Congregacao")
-                        .WithMany()
-                        .HasForeignKey("CongregacaoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Congregacao");
-                });
-
-            modelBuilder.Entity("CarrinhoAPI.Models.LocalPregacaoModel", b =>
                 {
                     b.HasOne("CarrinhoAPI.Models.CongregacaoModel", "Congregacao")
                         .WithMany()

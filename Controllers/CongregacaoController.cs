@@ -1,11 +1,7 @@
 ﻿using CarrinhoAPI.Models;
 using CarrinhoAPI.Repository.DataBase;
-using CarrinhoAPI.Repository.Interfaces;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Threading.Tasks;
 
 namespace CarrinhoAPI.Controllers
 {

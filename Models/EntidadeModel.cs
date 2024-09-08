@@ -1,6 +1,5 @@
 ﻿using CarrinhoAPI.Data;
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using System.Text;
 
 namespace CarrinhoAPI.Models
@@ -10,7 +9,7 @@ namespace CarrinhoAPI.Models
 
         public int Id { get; set; }
 
-        [Required(ErrorMessage = "CPF do cliente é obrigatorio!")]
+        //[Required(ErrorMessage = "CPF do cliente é obrigatorio!")]
         [RegularExpression("([0-9]+)", ErrorMessage = "Codigo do cliente aceita somente numericos!")]
         [StringLength(11, MinimumLength = 11, ErrorMessage = "CPF do cliente deve ter 11 digitos!")]
         public string? CPF { get; set; }
@@ -22,26 +21,29 @@ namespace CarrinhoAPI.Models
         [StringLength(10, ErrorMessage = "Cep deve ter no maximo 10 caracteres!")]
         public string? CEP { get; set; }
         public string? Cidade_Nome { get; set; }
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "UF do cliente deve ter 2 digitos!")]
         public string? UF { get; set; }
-        [StringLength(150, ErrorMessage = "Endereço do Endereço deve ter no Maximo 150 Caracteres!")]
+
+        [StringLength(250, ErrorMessage = "Endereço do Endereço deve ter no Maximo 250 Caracteres!")]
         public string? Endereco { get; set; }
         public string? Endereco_Numero { get; set; }
 
-        [StringLength(100, ErrorMessage = "Complemento do Endereço deve ter no Maximo 70 Caracteres!")]
+        [StringLength(250, ErrorMessage = "Complemento do Endereço deve ter no Maximo 250 Caracteres!")]
         public string? Endereco_Complemento { get; set; }
         public string? Bairro { get; set; }
        
-        [StringLength(2, ErrorMessage = "DDD do Cliente deve ter no Maximo 2 Caracteres!")]
+        [StringLength(2, MinimumLength = 2, ErrorMessage = "DDD do Cliente deve ter no Maximo 2 Caracteres!")]
         public string? DDD_Celular { get; set; }
 
         [StringLength(9, ErrorMessage = "Numero de Celular deve ter no Maximo 9 Caracteres!")]
         public string? Celular { get; set; }
+        [StringLength(1, MinimumLength = 1, ErrorMessage = "Sexo do Cliente deve ter no Maximo 1 Caracteres!")]
         public string? Sexo { get; set; }
         public DateTime? DataNascimento { get; set; }
         public string? Email { get; set; }
         public int CongregacaoId { get; set; }
         public virtual CongregacaoModel? Congregacao {  get; set; }
-        public DateTime Data_Cadastro { get; set; }
+        public DateTime? Data_Cadastro { get; set; }
         public void ValidarClass()
         {
             // Captura os results dos testes de validação dos campos
@@ -63,9 +65,12 @@ namespace CarrinhoAPI.Models
                 throw new ValidationException(sbrErrors.ToString());
             }
             // Valida CPF
-            if (!MetodosGerais.ValidaCPF(this.CPF))
+            if (CPF is not null)
             {
-                throw new ValidationException("Cpf Inválido!");
+                if (!MetodosGerais.ValidaCPF(this.CPF))
+                {
+                    throw new ValidationException("Cpf Inválido!");
+                }
             }
         }
 
