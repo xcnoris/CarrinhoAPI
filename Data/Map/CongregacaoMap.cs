@@ -11,6 +11,7 @@ namespace CarrinhoAPI.Data.Map
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Nome).IsRequired().HasMaxLength(200);
             builder.Property(x => x.Situacao).IsRequired();
+            builder.Property(x => x.DataCriacao).IsRequired();
 
 
         }

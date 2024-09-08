@@ -13,6 +13,7 @@ namespace CarrinhoAPI.Models
         public string Nome { get; set; }
 
         public SituacaoGeral Situacao { get; set; }
+        public DateTime DataCriacao { get; set; }
 
         public void ValidarClasse()
         {

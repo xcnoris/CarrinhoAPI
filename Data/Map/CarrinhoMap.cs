@@ -14,6 +14,7 @@ namespace CarrinhoAPI.Data.Map
             builder.Property(x => x.Situacao).IsRequired();
             builder.Property(x => x.CongregacaoId).IsRequired();
             builder.HasOne(x => x.Congregacao);
+            builder.Property(x => x.DataCriacao).IsRequired();
 
 
         }

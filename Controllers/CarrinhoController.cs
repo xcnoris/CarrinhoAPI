@@ -75,6 +75,8 @@ namespace CarrinhoAPI.Controllers
                 }
                 else
                 {
+                    carrinho.DataCriacao = DateTime.Now;
+
                     carrinho.ValidarClasse(); // Validação do objeto
                     await dalCarrinho.AdicionarAsync(carrinho);
                     return carrinho;

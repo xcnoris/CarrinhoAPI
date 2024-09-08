@@ -18,6 +18,8 @@ namespace CarrinhoAPI.Models.Enums
         [Required(ErrorMessage = "O ID da Congregação é obrigatório!")]
         public int CongregacaoId { get; set; }
         public virtual CongregacaoModel? Congregacao { get; set; }
+        
+        public DateTime DataCriacao { get; set; }
 
         public void ValidarClasse()
         {

@@ -63,6 +63,7 @@ namespace CarrinhoAPI.Controllers
         {
             try
             {
+                congregacao.DataCriacao = DateTime.Now;
                 // Valida a entidade antes de prosseguir
                 congregacao.ValidarClasse();
 
