@@ -22,6 +22,24 @@ namespace CarrinhoAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CarrinhoAPI.Models.CategoriaAgendamentoModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categoria_Agendamento");
+                });
+
             modelBuilder.Entity("CarrinhoAPI.Models.CongregacaoModel", b =>
                 {
                     b.Property<int>("Id")
@@ -204,6 +222,21 @@ namespace CarrinhoAPI.Migrations
                     b.HasIndex("CongregacaoId");
 
                     b.ToTable("Locais_Pregacao");
+                });
+
+            modelBuilder.Entity("CarrinhoAPI.Models.SituacaoAgendamentoModel", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Situacao_Agendamento");
                 });
 
             modelBuilder.Entity("CarrinhoAPI.Models.EntidadeModel", b =>
