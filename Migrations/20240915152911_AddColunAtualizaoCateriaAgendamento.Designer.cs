@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrinhoAPI.Migrations
 {
     [DbContext(typeof(Context))]
-    [Migration("20240911201430_Incial")]
-    partial class Incial
+    [Migration("20240915152911_AddColunAtualizaoCateriaAgendamento")]
+    partial class AddColunAtualizaoCateriaAgendamento
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,6 +25,60 @@ namespace CarrinhoAPI.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("CarrinhoAPI.Models.AgendamentoModel", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("CarrinhoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CategoriaId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("DataAgendamento")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("Data_Atualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Data_Criacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("EntidadeId")
+                        .HasColumnType("int");
+
+                    b.Property<TimeSpan>("Hora1")
+                        .HasColumnType("time");
+
+                    b.Property<TimeSpan>("Hora2")
+                        .HasColumnType("time");
+
+                    b.Property<int>("LocalPregacaoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SituacaoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategoriaId");
+
+                    b.HasIndex("EntidadeId");
+
+                    b.HasIndex("LocalPregacaoId");
+
+                    b.HasIndex("SituacaoId");
+
+                    b.HasIndex("CarrinhoId", "LocalPregacaoId", "DataAgendamento", "Hora1", "Hora2")
+                        .IsUnique();
+
+                    b.ToTable("Agendamento");
+                });
+
             modelBuilder.Entity("CarrinhoAPI.Models.CategoriaAgendamentoModel", b =>
                 {
                     b.Property<int>("Id")
@@ -32,6 +86,12 @@ namespace CarrinhoAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("Data_Atualizacao")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("Data_Criacao")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -229,8 +289,11 @@ namespace CarrinhoAPI.Migrations
 
             modelBuilder.Entity("CarrinhoAPI.Models.SituacaoAgendamentoModel", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nome")
                         .IsRequired()
@@ -240,6 +303,49 @@ namespace CarrinhoAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Situacao_Agendamento");
+                });
+
+            modelBuilder.Entity("CarrinhoAPI.Models.AgendamentoModel", b =>
+                {
+                    b.HasOne("CarrinhoAPI.Models.Enums.CarrinhoModel", "Carrinho")
+                        .WithMany()
+                        .HasForeignKey("CarrinhoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarrinhoAPI.Models.CategoriaAgendamentoModel", "Categoria")
+                        .WithMany()
+                        .HasForeignKey("CategoriaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarrinhoAPI.Models.EntidadeModel", "Entidade")
+                        .WithMany()
+                        .HasForeignKey("EntidadeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CarrinhoAPI.Models.LocalPregacaoModel", "LocalPregacao")
+                        .WithMany()
+                        .HasForeignKey("LocalPregacaoId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("CarrinhoAPI.Models.SituacaoAgendamentoModel", "Situacao")
+                        .WithMany()
+                        .HasForeignKey("SituacaoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Carrinho");
+
+                    b.Navigation("Categoria");
+
+                    b.Navigation("Entidade");
+
+                    b.Navigation("LocalPregacao");
+
+                    b.Navigation("Situacao");
                 });
 
             modelBuilder.Entity("CarrinhoAPI.Models.EntidadeModel", b =>

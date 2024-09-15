@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace CarrinhoAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class Incial : Migration
+    public partial class inicial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -43,7 +43,8 @@ namespace CarrinhoAPI.Migrations
                 name: "Situacao_Agendamento",
                 columns: table => new
                 {
-                    Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
                     Nome = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false)
                 },
                 constraints: table =>
@@ -136,6 +137,84 @@ namespace CarrinhoAPI.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Agendamento",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    SituacaoId = table.Column<int>(type: "int", nullable: false),
+                    EntidadeId = table.Column<int>(type: "int", nullable: false),
+                    CategoriaId = table.Column<int>(type: "int", nullable: false),
+                    CarrinhoId = table.Column<int>(type: "int", nullable: false),
+                    DataAgendamento = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Hora1 = table.Column<TimeSpan>(type: "time", nullable: false),
+                    Hora2 = table.Column<TimeSpan>(type: "time", nullable: false),
+                    LocalPregacaoId = table.Column<int>(type: "int", nullable: false),
+                    Data_Criacao = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Data_Atualizacao = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Agendamento", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Agendamento_Carrinhos_CarrinhoId",
+                        column: x => x.CarrinhoId,
+                        principalTable: "Carrinhos",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Agendamento_Categoria_Agendamento_CategoriaId",
+                        column: x => x.CategoriaId,
+                        principalTable: "Categoria_Agendamento",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Agendamento_Entidades_EntidadeId",
+                        column: x => x.EntidadeId,
+                        principalTable: "Entidades",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Agendamento_Locais_Pregacao_LocalPregacaoId",
+                        column: x => x.LocalPregacaoId,
+                        principalTable: "Locais_Pregacao",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Agendamento_Situacao_Agendamento_SituacaoId",
+                        column: x => x.SituacaoId,
+                        principalTable: "Situacao_Agendamento",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_CarrinhoId_LocalPregacaoId_DataAgendamento_Hora1_Hora2",
+                table: "Agendamento",
+                columns: new[] { "CarrinhoId", "LocalPregacaoId", "DataAgendamento", "Hora1", "Hora2" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_CategoriaId",
+                table: "Agendamento",
+                column: "CategoriaId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_EntidadeId",
+                table: "Agendamento",
+                column: "EntidadeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_LocalPregacaoId",
+                table: "Agendamento",
+                column: "LocalPregacaoId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Agendamento_SituacaoId",
+                table: "Agendamento",
+                column: "SituacaoId");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Carrinhos_CongregacaoId",
                 table: "Carrinhos",
@@ -155,6 +234,9 @@ namespace CarrinhoAPI.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Agendamento");
+
             migrationBuilder.DropTable(
                 name: "Carrinhos");
 

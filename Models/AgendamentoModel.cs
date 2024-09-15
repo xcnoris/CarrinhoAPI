@@ -14,14 +14,13 @@ namespace CarrinhoAPI.Models
         public int SituacaoId { get; set; }
         public virtual SituacaoAgendamentoModel? Situacao { get; set; }
 
+        [Required(ErrorMessage = "Pessoa do Agendamento é obrigatória!")]
+        public int EntidadeId { get; set; }
+        public virtual EntidadeModel? Entidade { get; set; }
 
         [Required(ErrorMessage = "Categoria do Agendamento é obrigatória!")]
         public int CategoriaId { get; set; }
         public virtual CategoriaAgendamentoModel? Categoria { get; set; }
-
-        [Required(ErrorMessage = "Pessoa do Agendamento é obrigatória!")]
-        public int EntidadeId { get; set; }
-        public virtual EntidadeModel? Entidade { get; set; }
 
         [Required(ErrorMessage = "Carrinho do Agendamento é obrigatório!")]
         public int CarrinhoId { get; set; }
@@ -43,10 +42,6 @@ namespace CarrinhoAPI.Models
         public DateTime Data_Criacao { get; set; }
         public DateTime? Data_Atualizacao { get; set; }
 
-        public AgendamentoModel()
-        {
-            Data_Criacao = DateTime.Now;
-        }
 
         public void ValidarClasse()
         {

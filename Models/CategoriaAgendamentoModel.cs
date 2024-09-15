@@ -10,6 +10,9 @@ namespace CarrinhoAPI.Models
         [StringLength(150, ErrorMessage = "Nome da categoria Deve ter no Maximo 150 Caracteres!")]
         public string Nome { get; set; }
 
+        public DateTime Data_Criacao { get; set; }
+        public DateTime? Data_Atualizacao { get; set; }
+
         public void ValidarClasse()
         {
             // Captura os results dos testes de validação dos campos

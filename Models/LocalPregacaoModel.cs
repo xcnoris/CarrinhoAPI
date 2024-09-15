@@ -35,11 +35,11 @@ namespace CarrinhoAPI.Models
         public SituacaoGeral Situacao { get; set; }
         [Required(ErrorMessage = "Id da Congregação é Obrigatorio!")]
         public int CongregacaoId { get; set; }
+        public virtual CongregacaoModel? Congregacao { get; set; }
 
         [Required(ErrorMessage ="Data Criação é ")]
         public DateTime Data_Cadastro { get; set; }
 
-        public virtual CongregacaoModel? Congregacao { get; set; }
 
 
 

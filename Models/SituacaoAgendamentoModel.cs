@@ -6,7 +6,7 @@ namespace CarrinhoAPI.Models
 {
     public class SituacaoAgendamentoModel
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
         [Required(ErrorMessage = "Nome da situação é Obrigatorio!")]
         [StringLength(100, ErrorMessage = "Nome da situação Deve ter no Maximo 100 Caracteres!")]
         public string Nome { get; set; }

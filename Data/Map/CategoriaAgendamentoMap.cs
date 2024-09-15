@@ -10,6 +10,8 @@ namespace CarrinhoAPI.Data.Map
         {
             builder.HasKey(x => x.Id);
             builder.Property(x => x.Nome);
+            builder.Property(x => x.Data_Criacao);
+            builder.Property(x => x.Data_Atualizacao);
         }
     }
 }
