@@ -17,7 +17,7 @@ namespace CarrinhoAPI.Controllers
         {
             try
             {
-                IEnumerable<CarrinhoModel> listCarrinho = await dalCarrinho.ListarAsync();
+                IEnumerable<CarrinhoModel> listCarrinho = await dalCarrinho.ListarAsyncComInclude("Congregacao");
                 return listCarrinho.ToList();
             }
             catch (ValidationException ex)

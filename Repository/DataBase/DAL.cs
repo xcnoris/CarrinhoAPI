@@ -23,6 +23,14 @@ namespace CarrinhoAPI.Repository.DataBase
             return await context.Set<T>().ToListAsync();
         }
 
+        public async Task<IEnumerable<T>> ListarAsyncComInclude(string include)
+        {
+            return await context
+                .Set<T>()
+                .Include(include)
+                .ToListAsync();
+        }
+
         public void Adicionar(T objeto)
         {
             context.Set<T>().Add(objeto);
