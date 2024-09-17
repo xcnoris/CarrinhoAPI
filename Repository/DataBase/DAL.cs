@@ -74,7 +74,16 @@ namespace CarrinhoAPI.Repository.DataBase
 
         public async Task<T?> BuscarPorAsync(Expression<Func<T, bool>> condicao)
         {
-            return await context.Set<T>().FirstOrDefaultAsync(condicao);
+            return await context
+                .Set<T>()
+                .FirstOrDefaultAsync(condicao);
+        }
+        public async Task<T?> BuscarPorAsyncComInclude(Expression<Func<T, bool>> condicao, string Include)
+        {
+            return await context
+                .Set<T>()
+                .Include(Include)
+                .FirstOrDefaultAsync(condicao);
         }
 
         public async Task<T?> RecuperarPorAsync(Expression<Func<T, bool>> condicao, string includeProperties = "")

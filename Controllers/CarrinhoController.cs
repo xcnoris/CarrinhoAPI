@@ -37,7 +37,7 @@ namespace CarrinhoAPI.Controllers
         {
             try
             {
-                CarrinhoModel carrinho = await dalCarrinho.BuscarPorAsync(c => c.Id.Equals(id));
+                CarrinhoModel carrinho = await dalCarrinho.BuscarPorAsyncComInclude(c => c.Id.Equals(id), "Congregacao");
 
                 if (carrinho is null)
                 {
