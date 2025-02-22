@@ -1,6 +1,7 @@
 ﻿using CarrinhoAPI.Models;
 using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.APPCarrinho.ModelosRequest;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarrinhoAPI.Controllers
@@ -9,9 +10,16 @@ namespace CarrinhoAPI.Controllers
     [ApiController]
     public class CongregacaoController : ControllerBase
     {
+        private readonly DAL<CongregacaoModel> dalCongregacao;
+
+        public CongregacaoController(DAL<CongregacaoModel> dalCongregacao)
+        {
+            this.dalCongregacao = dalCongregacao;
+        }
+
 
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<List<CongregacaoModel>>> BuscarTodos([FromServices] DAL<CongregacaoModel> dalCongregacao)
+        public async Task<ActionResult<List<CongregacaoModel>>> BuscarTodos()
         {
             try
             {
@@ -31,7 +39,7 @@ namespace CarrinhoAPI.Controllers
         }
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<CongregacaoModel>> BuscarPorId([FromServices] DAL<CongregacaoModel> dalCongregacao, int id)
+        public async Task<ActionResult<CongregacaoModel>> BuscarPorId( int id)
         {
             try
             {
@@ -57,18 +65,23 @@ namespace CarrinhoAPI.Controllers
         }
 
         [HttpPost("Adicionar")]
-        public async Task<ActionResult<CongregacaoModel>> Adicionar(
-           [FromServices] DAL<CongregacaoModel> dalCongregacao,
-           [FromBody] CongregacaoModel congregacao)
+        public async Task<ActionResult<CongregacaoModel>> Adicionar([FromBody] CriarCongregacaoModels congregacao)
         {
+
+            CongregacaoModel NovaCongregacao = new CongregacaoModel()
+            {
+                Nome = congregacao.Nome,
+                SituacaoId = congregacao.Situacao,
+                DataCriacao = DateTime.Now
+            };
+
             try
             {
-                congregacao.DataCriacao = DateTime.Now;
                 // Valida a entidade antes de prosseguir
-                congregacao.ValidarClasse();
+                NovaCongregacao.ValidarClasse();
 
                 // Adiciona a entidade ao banco de dados
-                await dalCongregacao.AdicionarAsync(congregacao);
+                await dalCongregacao.AdicionarAsync(NovaCongregacao);
 
                 // Retorna a entidade adicionada
                 return Ok(congregacao);
@@ -87,10 +100,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<CongregacaoModel>> Atualizar(
-            [FromServices] DAL<CongregacaoModel> dalCongregacao,
-            int id,
-            [FromBody] CongregacaoModel congregacao)
+        public async Task<ActionResult<CongregacaoModel>> Atualizar( int id, [FromBody] CongregacaoModel congregacao)
         {
             try
             {
@@ -127,7 +137,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover([FromServices] DAL<CongregacaoModel> dalCongregacao, int id)
+        public async Task<ActionResult<bool>> Remover( int id)
         {
             try
             {

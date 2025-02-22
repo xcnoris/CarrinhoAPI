@@ -10,10 +10,18 @@ namespace CarrinhoAPI.Controllers
     [ApiController]
     public class LocalPregacaoController : ControllerBase
     {
+        private readonly DAL<LocalPregacaoModel> dalLocalPregacao;
+        private readonly DAL<CongregacaoModel> dalCongregacao;
+
+        public LocalPregacaoController(DAL<CongregacaoModel> dalCongregacao, DAL<LocalPregacaoModel> _dalLocalPregacao)
+        {
+            dalCongregacao = dalCongregacao;
+            dalLocalPregacao = _dalLocalPregacao;
+        }
+
 
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<List<LocalPregacaoModel>>> BuscarTodos(
-            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao)
+        public async Task<ActionResult<List<LocalPregacaoModel>>> BuscarTodos()
         {
             try
             {
@@ -34,9 +42,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<LocalPregacaoModel>> BuscarPorId(
-            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
-            int id)
+        public async Task<ActionResult<LocalPregacaoModel>> BuscarPorId(int id)
         {
             try
             {
@@ -63,10 +69,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpPost("Adicionar")]
-        public async Task<ActionResult<LocalPregacaoModel>> Adicionar(
-           [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
-           [FromServices] DAL<CongregacaoModel> dalCongregacao,
-           [FromBody] LocalPregacaoModel localPregacao)
+        public async Task<ActionResult<LocalPregacaoModel>> Adicionar([FromBody] LocalPregacaoModel localPregacao)
         {
             try
             {
@@ -104,11 +107,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<LocalPregacaoModel>> Atualizar(
-            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
-            [FromServices] DAL<CongregacaoModel> dalCongregacao,
-            int id,
-            [FromBody] LocalPregacaoModel localPregacao)
+        public async Task<ActionResult<LocalPregacaoModel>> Atualizar(int id, [FromBody] LocalPregacaoModel localPregacao)
         {
             try
             {
@@ -164,9 +163,7 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover(
-            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
-            int id)
+        public async Task<ActionResult<bool>> Remover(int id)
         {
             try
             {
