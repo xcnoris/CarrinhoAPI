@@ -1,6 +1,7 @@
 ﻿using CarrinhoAPI.Models;
-using CarrinhoAPI.Repository.DataBase;
+using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.APPCarrinho.Class.clientes;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarrinhoAPI.Controllers
@@ -11,11 +12,11 @@ namespace CarrinhoAPI.Controllers
     {
 
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<List<EntidadeModel>>> BuscarTodos([FromServices] DAL<EntidadeModel> EntidadeDAL)
+        public async Task<ActionResult<List<EntidadeModels>>> BuscarTodos([FromServices] DAL<EntidadeModels> EntidadeDAL)
         {
             try
             {
-                IEnumerable<EntidadeModel> listEntidades = await EntidadeDAL.ListarAsync();
+                IEnumerable<EntidadeModels> listEntidades = await EntidadeDAL.ListarAsync();
                 return listEntidades.ToList();
             }
             catch (ValidationException ex)
@@ -30,11 +31,11 @@ namespace CarrinhoAPI.Controllers
         }
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<EntidadeModel>> BuscarPorId([FromServices] DAL<EntidadeModel> EntidadeDAL, int id)
+        public async Task<ActionResult<EntidadeModels>> BuscarPorId([FromServices] DAL<EntidadeModels> EntidadeDAL, int id)
         {
             try
             {
-                EntidadeModel entidade = await EntidadeDAL.BuscarPorAsync(c => c.Id.Equals(id));
+                EntidadeModels entidade = await EntidadeDAL.BuscarPorAsync(c => c.Id.Equals(id));
 
                 if (entidade is null)
                 {
@@ -56,10 +57,10 @@ namespace CarrinhoAPI.Controllers
         }
 
         [HttpPost("Adicionar")]
-        public async Task<ActionResult<EntidadeModel>> Adicionar(
-            [FromServices] DAL<EntidadeModel> dalEntidade,
+        public async Task<ActionResult<EntidadeModels>> Adicionar(
+            [FromServices] DAL<EntidadeModels> dalEntidade,
             [FromServices] DAL<CongregacaoModel> dalCongregacao,
-            [FromBody] EntidadeModel entidade)
+            [FromBody] EntidadeModels entidade)
         {
             try
             {
@@ -72,7 +73,7 @@ namespace CarrinhoAPI.Controllers
                 else
                 {
                     entidade.ValidarClass(); // Validação do objeto
-                    entidade.Data_Cadastro = DateTime.Now;
+                    entidade.DataCriacao = DateTime.Now;
                     await dalEntidade.AdicionarAsync(entidade);
                     return entidade;
                 }
@@ -90,11 +91,11 @@ namespace CarrinhoAPI.Controllers
         }
 
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<EntidadeModel>> Atualizar(
-            [FromServices] DAL<EntidadeModel> dalEntidade,
+        public async Task<ActionResult<EntidadeModels>> Atualizar(
+            [FromServices] DAL<EntidadeModels> dalEntidade,
             [FromServices] DAL<CongregacaoModel> dalCongregacao,
             int id,
-            [FromBody] EntidadeModel entidade)
+            [FromBody] EntidadeModels entidade)
         {
           
             try
@@ -156,12 +157,12 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover([FromServices] DAL<EntidadeModel> dalEntidade, int id)
+        public async Task<ActionResult<bool>> Remover([FromServices] DAL<EntidadeModels> dalEntidade, int id)
         {
             try
             {
                 // Primeiro, recupera a entidade existente pelo ID
-                EntidadeModel entidadeExistente = await dalEntidade.RecuperarPorAsync(c => c.Id.Equals(id));
+                EntidadeModels entidadeExistente = await dalEntidade.RecuperarPorAsync(c => c.Id.Equals(id));
 
                 if (entidadeExistente == null)
                 {

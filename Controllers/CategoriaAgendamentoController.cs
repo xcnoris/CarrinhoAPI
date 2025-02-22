@@ -1,8 +1,8 @@
 ﻿
-using CarrinhoAPI.Models;
-using CarrinhoAPI.Models.Enums;
-using CarrinhoAPI.Repository.DataBase;
+using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.APPCarrinho.agendamentos.Categoria_Agendamento;
+using Modelos.APPCarrinho.Modelos.carrinho;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarrinhoAPI.Controllers
@@ -13,11 +13,11 @@ namespace CarrinhoAPI.Controllers
     {
 
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<List<CategoriaAgendamentoModel>>> BuscarTodos([FromServices] DAL<CategoriaAgendamentoModel> dalCategoriaAgendamentoModel)
+        public async Task<ActionResult<List<CategoriaAgendamentoModels>>> BuscarTodos([FromServices] DAL<CategoriaAgendamentoModels> dalCategoriaAgendamentoModel)
         {
             try
             {
-                IEnumerable<CategoriaAgendamentoModel> listCategoriaAgendamentoModel = await dalCategoriaAgendamentoModel.ListarAsync();
+                IEnumerable<CategoriaAgendamentoModels> listCategoriaAgendamentoModel = await dalCategoriaAgendamentoModel.ListarAsync();
                 return listCategoriaAgendamentoModel.ToList();
             }
             catch (ValidationException ex)
@@ -33,11 +33,11 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<CategoriaAgendamentoModel>> BuscarPorId([FromServices] DAL<CategoriaAgendamentoModel> dalCategoriaAgendamentoModel, int id)
+        public async Task<ActionResult<CategoriaAgendamentoModels>> BuscarPorId([FromServices] DAL<CategoriaAgendamentoModels> dalCategoriaAgendamentoModel, int id)
         {
             try
             {
-                CategoriaAgendamentoModel CategoriaAgendamento = await dalCategoriaAgendamentoModel.BuscarPorAsync(c => c.Id.Equals(id));
+                CategoriaAgendamentoModels CategoriaAgendamento = await dalCategoriaAgendamentoModel.BuscarPorAsync(c => c.Id.Equals(id));
 
                 if (CategoriaAgendamento is null)
                 {
@@ -59,15 +59,14 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpPost("Adicionar")]
-        public async Task<ActionResult<CategoriaAgendamentoModel>> Adicionar(
-            [FromServices] DAL<CategoriaAgendamentoModel> dalCarrinho,
-            [FromBody] CategoriaAgendamentoModel categoriaAgendamentoModel)
+        public async Task<ActionResult<CategoriaAgendamentoModels>> Adicionar(
+            [FromServices] DAL<CategoriaAgendamentoModels> dalCarrinho,
+            [FromBody] CategoriaAgendamentoModels categoriaAgendamentoModel)
         {
             try
             {
-               categoriaAgendamentoModel.Data_Criacao = DateTime.Now;
+               categoriaAgendamentoModel.DataCriacao = DateTime.Now;
 
-                categoriaAgendamentoModel.ValidarClasse(); // Validação do objeto
                 await dalCarrinho.AdicionarAsync(categoriaAgendamentoModel);
                 return categoriaAgendamentoModel;
             }
@@ -85,27 +84,26 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<CarrinhoModel>> Atualizar(
-            [FromServices] DAL<CategoriaAgendamentoModel> dalCategoriaAgendamento,
+        public async Task<ActionResult<CarrinhoModels>> Atualizar(
+            [FromServices] DAL<CategoriaAgendamentoModels> dalCategoriaAgendamento,
             int id,
-            [FromBody] CategoriaAgendamentoModel CategoriaAgendamento)
+            [FromBody] CategoriaAgendamentoModels CategoriaAgendamento)
         {  
             try
             {
 
                      // Primeiro, recupera a entidade existente pelo ID
-                    CategoriaAgendamentoModel entidadeExistente = await dalCategoriaAgendamento.RecuperarPorAsync(c => c.Id.Equals(id));
+                    CategoriaAgendamentoModels entidadeExistente = await dalCategoriaAgendamento.RecuperarPorAsync(c => c.Id.Equals(id));
 
                     if (entidadeExistente == null)
                     {
                         // Retorna 404 Not Found se a entidade não existir
                         return NotFound($"Id {id} não existe no banco de dados!");
                     }
-                    CategoriaAgendamento.ValidarClasse();
 
                     // Atualiza os campos da entidade existente com os novos dados
                     entidadeExistente.Nome = CategoriaAgendamento.Nome;  // Exemplo de campo a ser atualizado
-                    entidadeExistente.Data_Atualizacao = DateTime.Now;      // Atualize outros campos conforme necessário
+                    entidadeExistente.DataAtualizacao = DateTime.Now;      // Atualize outros campos conforme necessário
 
 
                     // Chama o método do DAL para atualizar a entidade no banco de dados
@@ -128,12 +126,12 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover([FromServices] DAL<CategoriaAgendamentoModel> dalCategoriaAgendamento, int id)
+        public async Task<ActionResult<bool>> Remover([FromServices] DAL<CategoriaAgendamentoModels> dalCategoriaAgendamento, int id)
         {
             try
             {
                 // Primeiro, recupera a entidade existente pelo ID
-                CategoriaAgendamentoModel categoriaAgendamento = await dalCategoriaAgendamento.RecuperarPorAsync(c => c.Id.Equals(id));
+                CategoriaAgendamentoModels categoriaAgendamento = await dalCategoriaAgendamento.RecuperarPorAsync(c => c.Id.Equals(id));
 
                 if (categoriaAgendamento == null)
                 {

@@ -1,6 +1,7 @@
 ﻿using CarrinhoAPI.Models;
-using CarrinhoAPI.Repository.DataBase;
+using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
+using Modelos.APPCarrinho.agendamentos.LocalPregacao;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarrinhoAPI.Controllers
@@ -77,7 +78,7 @@ namespace CarrinhoAPI.Controllers
                 }
                 else
                 {
-                    localPregacao.Data_Cadastro = DateTime.Now;
+                    localPregacao.DataCriacao = DateTime.Now;
                     // Valida a entidade antes de prosseguir
                     localPregacao.ValidarClasse();
 
@@ -137,7 +138,7 @@ namespace CarrinhoAPI.Controllers
                     entidadeExistente.Bairro = localPregacao.Bairro;
                     entidadeExistente.Cidade = localPregacao.Cidade;
                     entidadeExistente.UF = localPregacao.UF;
-                    entidadeExistente.Situacao = localPregacao.Situacao;
+                    entidadeExistente.SituacaoId = localPregacao.SituacaoId;
                     entidadeExistente.CongregacaoId = localPregacao.CongregacaoId;
                     // Atualize outros campos conforme necessário
 

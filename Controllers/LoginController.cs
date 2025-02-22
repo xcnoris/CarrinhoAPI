@@ -1,27 +1,28 @@
-﻿
-using CarrinhoAPI.Models;
+﻿using CarrinhoAPI.Models;
 using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
-using Modelos.APPCarrinho.Modelos.carrinho;
+using Modelos.APPCarrinho.agendamentos.LocalPregacao;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarrinhoAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class CarrinhoController : ControllerBase
+    public class LoginController : ControllerBase
     {
 
         [HttpGet("BuscarTodos")]
-        public async Task<ActionResult<List<CarrinhoModels>>> BuscarTodos([FromServices] DAL<CarrinhoModels> dalCarrinho)
+        public async Task<ActionResult<List<LocalPregacaoModel>>> BuscarTodos(
+            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao)
         {
             try
             {
-                IEnumerable<CarrinhoModels> listCarrinho = await dalCarrinho.ListarAsyncComInclude("Congregacao");
-                return listCarrinho.ToList();
+                IEnumerable<LocalPregacaoModel> listLocalPregacao = await dalLocalPregacao.ListarAsync();
+                return listLocalPregacao.ToList();
             }
             catch (ValidationException ex)
             {
+                // Retorna um erro de validação com o detalhe da mensagem
                 return BadRequest("Erro: " + ex.Message);
             }
             catch (Exception ex)
@@ -33,21 +34,24 @@ namespace CarrinhoAPI.Controllers
 
 
         [HttpGet("BuscarPorId/{id}")]
-        public async Task<ActionResult<CarrinhoModels>> BuscarPorId([FromServices] DAL<CarrinhoModels> dalCarrinho, int id)
+        public async Task<ActionResult<LocalPregacaoModel>> BuscarPorId(
+            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
+            int id)
         {
             try
             {
-                CarrinhoModels carrinho = await dalCarrinho.BuscarPorAsyncComInclude(c => c.Id.Equals(id), "Congregacao");
+                LocalPregacaoModel localPregacao = await dalLocalPregacao.BuscarPorAsync(c => c.Id.Equals(id));
 
-                if (carrinho is null)
+                if (localPregacao is null)
                 {
                     // Retorna 404 Not Found se a entidade não existir
                     return NotFound($"Id {id} não existe no banco de dados!");
                 }
-                return carrinho;
+                return localPregacao;
             }
             catch (ValidationException ex)
             {
+                // Retorna um erro de validação com o detalhe da mensagem
                 return BadRequest("Erro: " + ex.Message);
             }
             catch (Exception ex)
@@ -55,31 +59,34 @@ namespace CarrinhoAPI.Controllers
                 // Retorna um erro genérico com a mensagem da exceção
                 return StatusCode(500, "Erro ao tentar buscar a entidade. " + ex.Message);
             }
-
         }
 
 
         [HttpPost("Adicionar")]
-        public async Task<ActionResult<CarrinhoModels>> Adicionar(
-            [FromServices] DAL<CarrinhoModels> dalCarrinho,
-            [FromServices] DAL<CongregacaoModel> dalCongregacao,
-            [FromBody] CarrinhoModels carrinho)
+        public async Task<ActionResult<LocalPregacaoModel>> Adicionar(
+           [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
+           [FromServices] DAL<CongregacaoModel> dalCongregacao,
+           [FromBody] LocalPregacaoModel localPregacao)
         {
             try
             {
-                CongregacaoModel congregaccao = await dalCongregacao.BuscarPorAsync(c => c.Id.Equals(carrinho.CongregacaoId));
+                CongregacaoModel congregaccao = await dalCongregacao.BuscarPorAsync(c => c.Id.Equals(localPregacao.CongregacaoId));
                 if (congregaccao is null)
                 {
                     // Retorna 404 Not Found se a entidade não existir
-                    return NotFound($"Id {carrinho.CongregacaoId} da Congregação não existe no banco de dados!");
+                    return NotFound($"Id {localPregacao.CongregacaoId} da Congregação não existe no banco de dados!");
                 }
                 else
                 {
-                    carrinho.DataCriacao = DateTime.Now;
+                    localPregacao.DataCriacao = DateTime.Now;
+                    // Valida a entidade antes de prosseguir
+                    localPregacao.ValidarClasse();
 
-                    carrinho.ValidarClasse(); // Validação do objeto
-                    await dalCarrinho.AdicionarAsync(carrinho);
-                    return carrinho;
+                    // Adiciona a entidade ao banco de dados
+                    await dalLocalPregacao.AdicionarAsync(localPregacao);
+
+                    // Retorna a entidade adicionada
+                    return Ok(localPregacao);
                 }
             }
             catch (ValidationException ex)
@@ -95,41 +102,48 @@ namespace CarrinhoAPI.Controllers
         }
 
 
+
         [HttpPut("Atualizar/{id}")]
-        public async Task<ActionResult<CarrinhoModels>> Atualizar(
-            [FromServices] DAL<CarrinhoModels> dalCarrinho,
+        public async Task<ActionResult<LocalPregacaoModel>> Atualizar(
+            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
             [FromServices] DAL<CongregacaoModel> dalCongregacao,
             int id,
-            [FromBody] CarrinhoModels carrinho)
-        {  
+            [FromBody] LocalPregacaoModel localPregacao)
+        {
             try
             {
-                CongregacaoModel congregaccao = await dalCongregacao.BuscarPorAsync(c => c.Id.Equals(carrinho.CongregacaoId));
+                CongregacaoModel congregaccao = await dalCongregacao.BuscarPorAsync(c => c.Id.Equals(localPregacao.CongregacaoId));
                 if (congregaccao is null)
                 {
                     // Retorna 404 Not Found se a entidade não existir
-                    return NotFound($"Id {carrinho.CongregacaoId} da Congregação não existe no banco de dados!");
+                    return NotFound($"Id {localPregacao.CongregacaoId} da Congregação não existe no banco de dados!");
                 }
                 else
                 {
+
                     // Primeiro, recupera a entidade existente pelo ID
-                    var entidadeExistente = await dalCarrinho.RecuperarPorAsync(c => c.Id.Equals(id));
+                    var entidadeExistente = await dalLocalPregacao.RecuperarPorAsync(c => c.Id.Equals(id));
 
                     if (entidadeExistente == null)
                     {
                         // Retorna 404 Not Found se a entidade não existir
                         return NotFound($"Id {id} não existe no banco de dados!");
                     }
-                    carrinho.ValidarClasse();
-
+                    localPregacao.ValidarClasse();
                     // Atualiza os campos da entidade existente com os novos dados
-                    entidadeExistente.Nome = carrinho.Nome;  // Exemplo de campo a ser atualizado
-                    entidadeExistente.Codigo_Carrinho = carrinho.Codigo_Carrinho;      // Atualize outros campos conforme necessário
-                    entidadeExistente.CongregacaoId = carrinho.CongregacaoId;
-                    entidadeExistente.SituacaoId = carrinho.SituacaoId;
+                    entidadeExistente.Nome = localPregacao.Nome;
+                    entidadeExistente.Descricao = localPregacao.Descricao;
+                    entidadeExistente.Endereco = localPregacao.Endereco;
+                    entidadeExistente.Complemento = localPregacao.Complemento;
+                    entidadeExistente.Bairro = localPregacao.Bairro;
+                    entidadeExistente.Cidade = localPregacao.Cidade;
+                    entidadeExistente.UF = localPregacao.UF;
+                    entidadeExistente.SituacaoId = localPregacao.SituacaoId;
+                    entidadeExistente.CongregacaoId = localPregacao.CongregacaoId;
+                    // Atualize outros campos conforme necessário
 
                     // Chama o método do DAL para atualizar a entidade no banco de dados
-                    await dalCarrinho.AtualizarAsync(entidadeExistente);
+                    await dalLocalPregacao.AtualizarAsync(entidadeExistente);
 
                     // Retorna a entidade atualizada dentro de um Ok()
                     return Ok(entidadeExistente);
@@ -148,37 +162,33 @@ namespace CarrinhoAPI.Controllers
         }
 
 
+
         [HttpDelete("Remover/{id}")]
-        public async Task<ActionResult<bool>> Remover([FromServices] DAL<CarrinhoModels> dalCarrinho, int id)
+        public async Task<ActionResult<bool>> Remover(
+            [FromServices] DAL<LocalPregacaoModel> dalLocalPregacao,
+            int id)
         {
             try
             {
                 // Primeiro, recupera a entidade existente pelo ID
-                CarrinhoModels entidadeExistente = await dalCarrinho.RecuperarPorAsync(c => c.Id.Equals(id));
+                LocalPregacaoModel entidadeExistente = await dalLocalPregacao.RecuperarPorAsync(c => c.Id.Equals(id));
 
                 if (entidadeExistente == null)
                 {
                     // Retorna 404 Not Found se a entidade não existir
                     return NotFound();
                 }
-                try
-                {
-                    // Chama o método do DAL para remover a entidade
-                    await dalCarrinho.DeletarAsync(entidadeExistente);
-                    // Retorna 204 No Content se a remoção foi bem-sucedida
-                    return NoContent();
-                }
-                catch (Exception ex)
-                {
-                    // Retorna um erro genérico ou detalhado se a remoção falhar
-                    // Você pode logar a exceção ex para fins de diagnóstico
-                    return StatusCode(500, "Erro ao tentar remover a entidade.");
-                }
+
+                // Chama o método do DAL para remover a entidade
+                await dalLocalPregacao.DeletarAsync(entidadeExistente);
+                // Retorna 204 No Content se a remoção foi bem-sucedida
+                return NoContent();
+
             }
             catch (ValidationException ex)
             {
                 // Retorna um erro de validação com o detalhe da mensagem
-                return BadRequest("Erro: " + ex.Message);
+                return BadRequest("Erro de validação: " + ex.Message);
             }
             catch (Exception ex)
             {

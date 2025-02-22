@@ -1,7 +1,4 @@
-using CarrinhoAPI.Data;
-using CarrinhoAPI.Models;
-using CarrinhoAPI.Repository.DataBase;
-using CarrinhoAPI.Repository.Interfaces;
+using DataBase.APPCarrinho.Data;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,10 +26,10 @@ builder.Services.AddSwaggerGen();
 //builder.Services.AddScoped<IEndPointCrud<CongregacaoModel>,DAL<CongregacaoModel>>();
 
 builder.Services.AddEntityFrameworkSqlServer()
-    .AddDbContext<Context>(
+    .AddDbContext<AppCarrinhoDBContext>(
         options => options.UseSqlServer(builder.Configuration.GetConnectionString("DataBase"))
     );
-builder.Services.AddScoped(typeof(DAL<>));
+builder.Services.AddScoped(typeof(DataBase.APPCarrinho.Data.DAL<>));
 
 var app = builder.Build();
 

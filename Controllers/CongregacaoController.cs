@@ -1,5 +1,5 @@
 ﻿using CarrinhoAPI.Models;
-using CarrinhoAPI.Repository.DataBase;
+using DataBase.APPCarrinho.Data;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -105,7 +105,7 @@ namespace CarrinhoAPI.Controllers
                 congregacao.ValidarClasse();
                 // Atualiza os campos da entidade existente com os novos dados
                 entidadeExistente.Nome = congregacao.Nome;  // Exemplo de campo a ser atualizado
-                entidadeExistente.Situacao = congregacao.Situacao;                          // Atualize outros campos conforme necessário
+                entidadeExistente.SituacaoId = congregacao.SituacaoId;                          // Atualize outros campos conforme necessário
 
                 // Chama o método do DAL para atualizar a entidade no banco de dados
                 await dalCongregacao.AtualizarAsync(entidadeExistente);
